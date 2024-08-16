@@ -3,7 +3,7 @@ selected = false;
 // Convert pixel to tile position.
 position = new Vector(x div 32, y div 32);
 
-
+image_index = irandom_range(0, 5);
 
 /// Possible movements.
 /// -------------------

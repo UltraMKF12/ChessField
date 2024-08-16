@@ -196,4 +196,8 @@ board[5,5].unit.in_line = 0;
 board[5,5].unit.special = [new Vector(-1, -2), new Vector(1, -2), new Vector(-1, 2), new Vector(1, 2),
 						   new Vector(-2, -1), new Vector(-2, 1), new Vector(2, -1), new Vector(2, 1)];
 
+CreateUnit(3, 6, obj_unit);
+CreateUnit(7, 1, obj_unit);
+CreateUnit(4, 2, obj_unit);
+
 sprite_index = -1;	//Hide the sprite
