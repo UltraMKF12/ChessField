@@ -14,3 +14,6 @@ else
 	y = position.y*32;
 	depth = 0;
 }
+
+if team == 1 image_blend = c_red;
+if team == 2 image_blend = c_purple;

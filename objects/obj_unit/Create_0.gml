@@ -1,4 +1,5 @@
 selected = false;
+team = 0;	// Team 0 is player
 
 // Convert pixel to tile position.
 position = new Vector(x div 32, y div 32);

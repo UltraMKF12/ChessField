@@ -2,6 +2,7 @@ draw_set_alpha(0.4);
 draw_set_color(c_yellow);
 for (var _i = 0; _i < array_length(possible_moves); _i++) {
 	var _tl = possible_moves[_i];
+	_tl = new Vector4(_tl, tile_size);
     draw_rectangle(_tl.x1, _tl.y1, _tl.x2, _tl.y2, false);
 }
 

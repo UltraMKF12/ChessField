@@ -1,8 +1,8 @@
 // Get camera movement buttons
 var _left_button = keyboard_check(ord("A")) or keyboard_check(vk_left);
 var _right_button = keyboard_check(ord("D")) or keyboard_check(vk_right);
-var _up_button = keyboard_check(ord("W")) or keyboard_check(vk_right);
-var _down_button = keyboard_check(ord("S")) or keyboard_check(vk_right);
+var _up_button = keyboard_check(ord("W")) or keyboard_check(vk_up);
+var _down_button = keyboard_check(ord("S")) or keyboard_check(vk_down);
 var _zoom_plus = mouse_wheel_up();
 var _zoom_minus = mouse_wheel_down();
 

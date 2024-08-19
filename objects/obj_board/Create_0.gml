@@ -28,7 +28,7 @@ Tile = function(_color = "white", _unit = noone) constructor
 	static SetTileTexture = function()
 	{
 		var _random_black = [7, 11];
-		var _random_white = [1, 5];
+		var _random_white = [0, 5];
 		
 		if color == "white"
 		{
@@ -73,63 +73,63 @@ SelectUnit = function(_cell_x, _cell_y)
 	selected_unit = board[_cell_x][_cell_y].unit;
 	selected_unit.selected = true;
 	
-	/// In Line
 	var _size_min = 0;
 	var _size_max = size-1;
 	var _in_line = selected_unit.in_line;
-	var _horizontal_min = clamp(_cell_x - _in_line, _size_min, _size_max);
-	var _horizontal_max = clamp(_cell_x + _in_line, _size_min, _size_max);
-	var _vertical_min = clamp(_cell_y - _in_line, _size_min, _size_max);
-	var _vertical_max = clamp(_cell_y + _in_line, _size_min, _size_max);
+	var _diagonal = selected_unit.diagonal;
+	var _team = selected_unit.team;
 	
+	// Horizontal and vertical line check
+	// These moves get blocked when it intersects an enemy or an ally
+	var _directions_x = [];
+	var _directions_y = [];
+	var _directions_movement = []; // How many tiles can it move in that direction;
 	if _in_line > 0
 	{
-		for(var _h = _horizontal_min; _h <= _horizontal_max; _h++)
-		{
-			if _h == _cell_x continue; // Skip the unit location
-			var _new_tile = new Vector4(new Vector(_h, _cell_y), tile_size);
-			array_push(possible_moves, _new_tile);
-		}
-	
-		for(var _v = _vertical_min; _v <= _vertical_max; _v++)
-		{
-			if _v == _cell_y continue; // Skip the unit location
-			var _new_tile = new Vector4(new Vector(_cell_x, _v), tile_size);
-			array_push(possible_moves, _new_tile);
-		}
-	}	
-	
-	/// Diagonal
-	var _diagonal = selected_unit.diagonal;
-	
+		_directions_x = [0, 1, 0, -1];
+		_directions_y = [-1, 0, 1, 0];
+		_directions_movement = [_in_line, _in_line, _in_line, _in_line];
+	}
 	if _diagonal > 0
 	{
-		// Check for all 4 diagonals.
-		_diagonal_x = [+1, +1, -1, -1];
-		_diagonal_y = [-1, +1, +1, -1];
-		for (var _d = 0; _d < 4; _d++)
-		{
-			var _current_h = _cell_x;
-			var _current_v = _cell_y;
-			for (var _d2 = 0; _d2 < _diagonal; _d2++)
+		_directions_x = array_concat(_directions_x, [+1, +1, -1, -1]);
+		_directions_y = array_concat(_directions_y, [-1, +1, +1, -1]);
+		_directions_movement = array_concat(_directions_movement, [_diagonal, _diagonal, _diagonal, _diagonal]);
+	}
+	
+	for(var _dir = 0; _dir < array_length(_directions_x); _dir++)
+	{
+		var _current_x = _cell_x;
+		var _current_y = _cell_y;
+		for (var _dir2 = 0; _dir2 < _directions_movement[_dir]; _dir2++) {
+		    _current_x += _directions_x[_dir];
+			_current_y += _directions_y[_dir];
+			
+			// Check for table out of bounds
+			if _current_x < _size_min or _current_x > _size_max or
+			   _current_y < _size_min or _current_y > _size_max
 			{
-				_current_h += _diagonal_x[_d];
-				_current_v += _diagonal_y[_d];
-				
-				if _current_h < _size_min or _current_h > _size_max or
-				   _current_v < _size_min or _current_v > _size_max
-				{
-					 break;	// The diagonal is at the end of the level  
-				}
-				
-				var _new_tile = new Vector4(new Vector(_current_h, _current_v), tile_size);
-				array_push(possible_moves, _new_tile);
+				break;
 			}
+			
+			// Check if its an not existing tile (It felt down)
+			if board[_current_x][_current_y].texture == 0 break;
+			
+			// Check if it's a unit in the same team
+			var _unit = board[_current_x][_current_y].unit;
+			if _unit != noone and _unit.team == _team break;
+			
+			// Add the tile to the moveset
+			var _new_tile = new Vector(_current_x, _current_y);
+			array_push(possible_moves, _new_tile);
+			
+			// If it's a different team unit, the unit cant move over it.
+			if _unit != noone and _unit.team != _team break;
 		}
 	}
 	
 	
-	///Special
+	/// Special Movements that jump over other units
 	var _special_amount = array_length(selected_unit.special);
 	if _special_amount > 0
 	{
@@ -138,15 +138,26 @@ SelectUnit = function(_cell_x, _cell_y)
 		{
 			_new_pos = new Vector(_cell_x + _special_array[_s].x, _cell_y + _special_array[_s].y);
 			
-			// Check for out of bounds and non changing positions.
+			// Check for table out of bounds
 			if _new_pos.x < _size_min or _new_pos.x > _size_max or
-			   _new_pos.y < _size_min or _new_pos.y > _size_max or
-			   (_new_pos.x == _cell_x and _new_pos.y == _cell_y)
+			   _new_pos.y < _size_min or _new_pos.y > _size_max
 			{
 				continue;
 			}
 			
-			array_push(possible_moves, new Vector4(_new_pos, tile_size));
+			// Check if its an not existing tile (It felt down)
+			if board[_new_pos.x][_new_pos.y].texture == 0 continue;
+			
+			// Check if it's a unit in the same team
+			var _unit = board[_new_pos.x][_new_pos.y].unit;
+			if _unit != noone and _unit.team == _team continue;
+			
+			// Add the tile to the moveset
+			var _new_tile = new Vector(_new_pos.x, _new_pos.y);
+			array_push(possible_moves, _new_tile);
+			
+			// If it's a different team unit, the unit cant move over it.
+			if _unit != noone and _unit.team != _team continue;
 		}
 	}
 }
@@ -157,10 +168,11 @@ MoveUnit = function(_prev_cell_x, _prev_cell_y, _new_cell_x, _new_cell_y)
 	var _prev_tile = board[_prev_cell_x, _prev_cell_y];
 	var _new_tile = board[_new_cell_x, _new_cell_y];
 	
-	if _new_tile.unit != noone 
+	// Guaranteed to be an enemy unit, its check in step event
+	// Destroy the enemy unit
+	if _new_tile.unit != noone
 	{
-		CancelSelection(); // Currently only move to empty tile.
-		return;
+		instance_destroy(_new_tile.unit);
 	}
 	
 	_new_tile.unit = _prev_tile.unit;
@@ -188,16 +200,20 @@ CancelSelection = function()
 //// SETUP CALLS
 //// ---------------------
 CreateUnit(4, 4, obj_unit);
+
 CreateUnit(2, 3, obj_unit);
 board[2,3].unit.diagonal = 3;
 board[2,3].unit.in_line = 0;
+
 CreateUnit(5, 5, obj_unit);
 board[5,5].unit.in_line = 0;
 board[5,5].unit.special = [new Vector(-1, -2), new Vector(1, -2), new Vector(-1, 2), new Vector(1, 2),
 						   new Vector(-2, -1), new Vector(-2, 1), new Vector(2, -1), new Vector(2, 1)];
 
 CreateUnit(3, 6, obj_unit);
+board[3][6].unit.team = 1;
 CreateUnit(7, 1, obj_unit);
+board[7][1].unit.team = 1;
 CreateUnit(4, 2, obj_unit);
 
 sprite_index = -1;	//Hide the sprite
