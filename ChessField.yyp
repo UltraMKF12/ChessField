@@ -43,6 +43,7 @@
     {"id":{"name":"spr_board_black","path":"sprites/spr_board_black/spr_board_black.yy",},},
     {"id":{"name":"spr_board_tileset","path":"sprites/spr_board_tileset/spr_board_tileset.yy",},},
     {"id":{"name":"spr_board_white","path":"sprites/spr_board_white/spr_board_white.yy",},},
+    {"id":{"name":"spr_game_icon","path":"sprites/spr_game_icon/spr_game_icon.yy",},},
     {"id":{"name":"spr_manager_board","path":"sprites/spr_manager_board/spr_manager_board.yy",},},
     {"id":{"name":"spr_manager_camera","path":"sprites/spr_manager_camera/spr_manager_camera.yy",},},
     {"id":{"name":"spr_manager_fpscounter","path":"sprites/spr_manager_fpscounter/spr_manager_fpscounter.yy",},},
