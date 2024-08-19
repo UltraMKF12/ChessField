@@ -37,7 +37,7 @@ Destroy = function(_grid_x, _grid_y, _tile_size)
 	var _y2 = y;
 		
 	var _direction = point_direction(_x1, _y1, _x2, _y2);
-	speed = 0.4;
+	speed = 0.5;
 	direction = _direction;
 }
 
