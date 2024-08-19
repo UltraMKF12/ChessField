@@ -16,7 +16,10 @@ is_selection_valid = _is_valid;
 // Exit step even if mouse out of bounds
 if mouse_grid.x < 0 or mouse_grid.x >= size or
    mouse_grid.y < 0 or mouse_grid.y >= size
-   exit;
+{
+	mouse_grid.x = 0;
+	mouse_grid.y = 0;
+}
 
 if mouse_check_button_pressed(mb_left)
 {
