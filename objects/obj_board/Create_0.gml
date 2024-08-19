@@ -12,7 +12,6 @@ mouse_grid = new Vector(0, 0);
 possible_moves = [];
 
 
-
 //// ---------------------
 //// FUNCTIONS AND STRUCTS
 //// ---------------------
@@ -28,7 +27,7 @@ Tile = function(_color = "white", _unit = noone) constructor
 	static SetTileTexture = function()
 	{
 		var _random_black = [7, 11];
-		var _random_white = [0, 5];
+		var _random_white = [1, 5];
 		
 		if color == "white"
 		{
@@ -62,9 +61,11 @@ for (var _i = 0; _i < size; _i++) {
 }
 
 // Create a unit on the board
-CreateUnit = function(_cell_x, _cell_y, _unit)
+CreateUnit = function(_cell_x, _cell_y, _unit, _team = 0)
 {
-	board[_cell_x][_cell_y].unit = instance_create_layer(_cell_x*tile_size, _cell_y*tile_size, "Units", _unit);
+	var _new_unit = instance_create_layer(_cell_x*tile_size, _cell_y*tile_size, "Units", _unit);
+	board[_cell_x][_cell_y].unit = _new_unit;
+	_new_unit.team = _team;
 }
 
 // Selects a unit and calculates the tile that it can move to
@@ -168,11 +169,11 @@ MoveUnit = function(_prev_cell_x, _prev_cell_y, _new_cell_x, _new_cell_y)
 	var _prev_tile = board[_prev_cell_x, _prev_cell_y];
 	var _new_tile = board[_new_cell_x, _new_cell_y];
 	
-	// Guaranteed to be an enemy unit, its check in step event
+	// Guaranteed to be an enemy unit, it's checked in the step event
 	// Destroy the enemy unit
 	if _new_tile.unit != noone
 	{
-		instance_destroy(_new_tile.unit);
+		_new_tile.unit.Destroy(_prev_cell_x, _prev_cell_y, tile_size);
 	}
 	
 	_new_tile.unit = _prev_tile.unit;
@@ -199,21 +200,24 @@ CancelSelection = function()
 //// ---------------------
 //// SETUP CALLS
 //// ---------------------
-CreateUnit(4, 4, obj_unit);
+// Generate random board
+for(var _b1 = 0; _b1 < size; _b1++)
+{
+	for(var _b2 = 0; _b2 < size; _b2++)
+	{
+		if irandom_range(0, 10) == 0
+		{
+			CreateUnit(_b1, _b2, obj_unit, irandom_range(0, 2));
+			var _unit = board[_b1][_b2].unit;
+			_unit.in_line = irandom_range(0, 5);
+			_unit.diagonal = irandom_range(0, 5);
+			_unit.special = (irandom_range(0, 4) == 0) ?
+							[new Vector(-1, -2), new Vector(1, -2), new Vector(-1, 2), new Vector(1, 2),
+							new Vector(-2, -1), new Vector(-2, 1), new Vector(2, -1), new Vector(2, 1)] : [];
+			_unit.FindImage();
+		}
+	}
+}
 
-CreateUnit(2, 3, obj_unit);
-board[2,3].unit.diagonal = 3;
-board[2,3].unit.in_line = 0;
-
-CreateUnit(5, 5, obj_unit);
-board[5,5].unit.in_line = 0;
-board[5,5].unit.special = [new Vector(-1, -2), new Vector(1, -2), new Vector(-1, 2), new Vector(1, 2),
-						   new Vector(-2, -1), new Vector(-2, 1), new Vector(2, -1), new Vector(2, 1)];
-
-CreateUnit(3, 6, obj_unit);
-board[3][6].unit.team = 1;
-CreateUnit(7, 1, obj_unit);
-board[7][1].unit.team = 1;
-CreateUnit(4, 2, obj_unit);
 
 sprite_index = -1;	//Hide the sprite

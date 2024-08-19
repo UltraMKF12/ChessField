@@ -9,7 +9,7 @@ for (var _i = 0; _i < array_length(possible_moves); _i++) {
 draw_set_color(c_red);
 if is_selection_valid
 {
-	var _mouse_rectangle = new Vector4(mouse_grid, 32);
+	var _mouse_rectangle = new Vector4(mouse_grid, tile_size);
 	draw_rectangle(_mouse_rectangle.x1, _mouse_rectangle.y1, _mouse_rectangle.x2, _mouse_rectangle.y2, false);
 }
 
