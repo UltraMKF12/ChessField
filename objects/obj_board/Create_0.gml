@@ -1,8 +1,9 @@
 // Creates a square board with x tiles.
 module_amount = 5;
+module_size = 4;
 
 // General Board properties
-size = module_amount * 4;
+size = module_amount * module_size;
 tile_size = 32;
 
 board = [];		// Stores every tile
@@ -36,32 +37,38 @@ Tile = function(_range) constructor
 }
 
 // Struct representing a single Module on the board.
-Module = function() constructor
+Module = function(_position) constructor
 {
-	
+	// Tile positions on the board
+	position = _position;
+	is_enabled = false;
 }
 
 
-//// -------------------
-//// Creating the Board
-//// -------------------
+//// -------------------------------
+//// Creating the Board and Modules
+//// -------------------------------
 
 // Create the tilemap layer for the board.
 var _layer = layer_create(100);
 tilemap = layer_tilemap_create(_layer, 0, 0, ts_board, size, size);
 
 // Fill the board up with tiles of alternating black and white.
-for (var _i = 0; _i < size; _i++) {
-    for (var _j = 0; _j < size; _j++) {
-		if (_i + _j) % 2 == 0
+for (var _t1 = 0; _t1 < size; _t1++) {
+    for (var _t2 = 0; _t2 < size; _t2++) {
+		if (_t1 + _t2) % 2 == 0
 		{
-			board[_i][_j] = new Tile(_random_white);
+			board[_t1][_t2] = new Tile(_random_white);
 		}
-		else board[_i][_j] = new Tile(_random_black);
-		
-		// Set the tilemap to the correct texture
-		//tilemap_set(tilemap, board[_i][_j].texture, _i, _j);
-		// By default it will be 0, meaning no modules visible.
+		else board[_t1][_t2] = new Tile(_random_black);
+	}
+}
+
+// Create the modules
+for (var _m1 = 0; _m1 < module_amount; _m1++) {
+	for (var _m2 = 0; _m2 < module_amount; _m2++) {
+		var _position = new Vector4(new Vector(_m1, _m2), module_size);
+		modules[_m1][_m2] = new Module(_position);
 	}
 }
 
@@ -69,6 +76,23 @@ for (var _i = 0; _i < size; _i++) {
 //// ---------------------------------
 //// Functions for Board modifications
 //// ---------------------------------
+
+// Redraw the tileset
+RedrawBoard = function()
+{
+	for (var _t1 = 0; _t1 < size; _t1++) {
+	    for (var _t2 = 0; _t2 < size; _t2++) {
+			if board[_t1][_t2].is_enabled
+			{
+				tilemap_set(tilemap, board[_t1][_t2].texture, _t1, _t2);
+			}
+			else
+			{
+				tilemap_set(tilemap, 0, _t1, _t2);
+			}
+		}
+	}
+}
 
 // Create a unit on the board
 CreateUnit = function(_cell_x, _cell_y, _unit, _team = 0)
@@ -210,11 +234,36 @@ CancelSelection = function()
 //// Functions for Module modifications
 //// ----------------------------------
 
+EnableModule = function(_x, _y)
+{
+	var _module = modules[_x][_y];
+	_module.is_enabled = true;
+	show_debug_message(_module.position.x1);
+	for (var _t1 = _module.position.x1; _t1 <= _module.position.x2; _t1++) {
+		for (var _t2 = _module.position.y1; _t2 <= _module.position.y2; _t2++) {
+			board[_t1][_t2].is_enabled = true;
+		}
+	}
+	RedrawBoard();
+}
 
+DisableModule = function(_x, _y)
+{
+	var _module = modules[_x][_y];
+	_module.is_enabled = false;
+	for (var _t1 = _module.position.x1; _t1 <= _module.position.x2; _t1++) {
+		for (var _t2 = _module.position.y1; _t2 <= _module.position.y2; _t2++) {
+			board[_t1][_t2].is_enabled = false;
+		}
+	}
+	RedrawBoard();
+}
 
 //// ------------
 //// SETUP CALLS
 //// ------------
 
+EnableModule(2, 2);
+EnableModule(3, 2);
 
 sprite_index = -1;	//Hide the sprite

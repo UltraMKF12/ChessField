@@ -13,7 +13,7 @@ for (var _i = 0; _i < array_length(possible_moves); _i++)
 is_selection_valid = _is_valid;
 
 
-// Exit step even if mouse out of bounds
+// Fix mouse position if out of bounds
 if mouse_grid.x < 0 or mouse_grid.x >= size or
    mouse_grid.y < 0 or mouse_grid.y >= size
 {
@@ -21,6 +21,20 @@ if mouse_grid.x < 0 or mouse_grid.x >= size or
 	mouse_grid.y = 0;
 }
 
+
+//DEUBG: Module enabling
+if mouse_check_button_pressed(mb_left)
+{
+	mouse_grid.x = mouse_grid.x div 4;
+	mouse_grid.y = mouse_grid.y div 4;
+
+	if modules[mouse_grid.x][mouse_grid.y].is_enabled DisableModule(mouse_grid.x, mouse_grid.y);
+	else EnableModule(mouse_grid.x, mouse_grid.y);
+}
+
+exit;
+
+// Select unit
 if mouse_check_button_pressed(mb_left)
 {
 	var _selected_tile = board[mouse_grid.x][mouse_grid.y]
@@ -31,6 +45,7 @@ if mouse_check_button_pressed(mb_left)
 	}
 }
 
+// Move unit to selected position
 if mouse_check_button_released(mb_left)
 {
 	if is_selection_valid and selected_unit != noone
