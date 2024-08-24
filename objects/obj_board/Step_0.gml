@@ -23,7 +23,7 @@ if mouse_grid.x < 0 or mouse_grid.x >= size or
 
 
 //DEUBG: Module enabling
-if mouse_check_button_pressed(mb_left)
+if mouse_check_button_pressed(mb_right)
 {
 	mouse_grid.x = mouse_grid.x div 4;
 	mouse_grid.y = mouse_grid.y div 4;
@@ -31,8 +31,6 @@ if mouse_check_button_pressed(mb_left)
 	if modules[mouse_grid.x][mouse_grid.y].is_enabled DisableModule(mouse_grid.x, mouse_grid.y);
 	else EnableModule(mouse_grid.x, mouse_grid.y);
 }
-
-exit;
 
 // Select unit
 if mouse_check_button_pressed(mb_left)

@@ -97,7 +97,7 @@ RedrawBoard = function()
 // Create a unit on the board
 CreateUnit = function(_cell_x, _cell_y, _unit, _team = 0)
 {
-	var _new_unit = instance_create_layer(_cell_x*tile_size, _cell_y*tile_size, "Units", _unit);
+	var _new_unit = instance_create_layer(_cell_x*tile_size+16, _cell_y*tile_size+16, "Units", _unit);
 	board[_cell_x][_cell_y].unit = _new_unit;
 	_new_unit.team = _team;
 }
@@ -149,7 +149,7 @@ SelectUnit = function(_cell_x, _cell_y)
 			}
 			
 			// Check if its an not existing tile (It felt down)
-			if board[_current_x][_current_y].texture == 0 break;
+			if not board[_current_x][_current_y].is_enabled break;
 			
 			// Check if it's a unit in the same team
 			var _unit = board[_current_x][_current_y].unit;
@@ -182,7 +182,7 @@ SelectUnit = function(_cell_x, _cell_y)
 			}
 			
 			// Check if its an not existing tile (It felt down)
-			if board[_new_pos.x][_new_pos.y].texture == 0 continue;
+			if not board[_new_pos.x][_new_pos.y].is_enabled continue;
 			
 			// Check if it's a unit in the same team
 			var _unit = board[_new_pos.x][_new_pos.y].unit;
@@ -242,6 +242,12 @@ EnableModule = function(_x, _y)
 	for (var _t1 = _module.position.x1; _t1 <= _module.position.x2; _t1++) {
 		for (var _t2 = _module.position.y1; _t2 <= _module.position.y2; _t2++) {
 			board[_t1][_t2].is_enabled = true;
+			
+			var _unit = choose(obj_unit_bishop, obj_unit_horse, obj_unit_king, obj_unit_pawn, obj_unit_queen, obj_unit_rook);
+			if irandom_range(0,5) == 0
+			{
+				CreateUnit(_t1, _t2, _unit, irandom_range(0, 2));
+			}
 		}
 	}
 	RedrawBoard();
@@ -254,6 +260,13 @@ DisableModule = function(_x, _y)
 	for (var _t1 = _module.position.x1; _t1 <= _module.position.x2; _t1++) {
 		for (var _t2 = _module.position.y1; _t2 <= _module.position.y2; _t2++) {
 			board[_t1][_t2].is_enabled = false;
+			
+			var _unit = board[_t1][_t2].unit;
+			if _unit != noone
+			{
+				board[_t1][_t2].unit = noone;
+				_unit.Destroy(_t1, _t2, tile_size);
+			}
 		}
 	}
 	RedrawBoard();

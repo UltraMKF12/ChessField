@@ -15,7 +15,6 @@ if is_selection_valid
 
 draw_set_alpha(1);
 
-//draw_text(mouse_x+20, mouse_y, tilemap_get_at_pixel(tilemap, mouse_x, mouse_y));
 
 // Draw game border.
 draw_rectangle_color(0, 0, size*tile_size, size*tile_size, c_aqua, c_aqua, c_aqua, c_aqua, true);
