@@ -11,8 +11,8 @@
   "defaultScriptType":1,
   "Folders":[
     {"$GMFolder":"","%Name":"Objects","folderPath":"folders/Objects.yy","name":"Objects","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"Units","folderPath":"folders/Objects/Units.yy","name":"Units","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Manager Objects","folderPath":"folders/Objects/Manager Objects.yy","name":"Manager Objects","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Units","folderPath":"folders/Objects/Units.yy","name":"Units","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Rooms","folderPath":"folders/Rooms.yy","name":"Rooms","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Scripts and Shaders","folderPath":"folders/Scripts and Shaders.yy","name":"Scripts and Shaders","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Sounds","folderPath":"folders/Sounds.yy","name":"Sounds","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -31,7 +31,6 @@
   },
   "name":"ChessField",
   "resources":[
-    {"id":{"name":"Current Feature Needs","path":"notes/Current Feature Needs/Current Feature Needs.yy",},},
     {"id":{"name":"obj_board","path":"objects/obj_board/obj_board.yy",},},
     {"id":{"name":"obj_camera","path":"objects/obj_camera/obj_camera.yy",},},
     {"id":{"name":"obj_fpscounter","path":"objects/obj_fpscounter/obj_fpscounter.yy",},},

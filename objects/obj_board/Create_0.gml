@@ -94,12 +94,24 @@ RedrawBoard = function()
 	}
 }
 
-// Create a unit on the board
+// Create a unit on the board (Does not delete a unit already there)
 CreateUnit = function(_cell_x, _cell_y, _unit, _team = 0)
 {
+	if not board[_cell_x][_cell_y].is_enabled return;
+	
 	var _new_unit = instance_create_layer(_cell_x*tile_size+16, _cell_y*tile_size+16, "Units", _unit);
 	board[_cell_x][_cell_y].unit = _new_unit;
 	_new_unit.team = _team;
+}
+
+// Destroy a unit on the board, uses the destroyers position, for direction calculations
+DestroyUnit = function(_cell_x, _cell_y, _from_x, _from_y)
+{
+	if board[_cell_x][_cell_y].unit != noone
+	{
+		board[_cell_x][_cell_y].unit.Destroy(_from_x, _from_y, tile_size);
+		board[_cell_x][_cell_y].unit = noone;
+	}
 }
 
 // Selects a unit and calculates the tile that it can move to
@@ -208,7 +220,7 @@ MoveUnit = function(_prev_cell_x, _prev_cell_y, _new_cell_x, _new_cell_y)
 	// Destroy the enemy unit
 	if _new_tile.unit != noone
 	{
-		_new_tile.unit.Destroy(_prev_cell_x, _prev_cell_y, tile_size);
+		DestroyUnit(_new_cell_x, _new_cell_y, _prev_cell_x, _prev_cell_y);
 	}
 	
 	_new_tile.unit = _prev_tile.unit;
@@ -264,8 +276,7 @@ DisableModule = function(_x, _y)
 			var _unit = board[_t1][_t2].unit;
 			if _unit != noone
 			{
-				board[_t1][_t2].unit = noone;
-				_unit.Destroy(_t1, _t2, tile_size);
+				DestroyUnit(_t1, _t2, _t1, _t2);
 			}
 		}
 	}

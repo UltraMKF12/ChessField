@@ -25,11 +25,11 @@ if mouse_grid.x < 0 or mouse_grid.x >= size or
 //DEUBG: Module enabling
 if mouse_check_button_pressed(mb_right)
 {
-	mouse_grid.x = mouse_grid.x div 4;
-	mouse_grid.y = mouse_grid.y div 4;
+	var _x = mouse_grid.x div 4;
+	var _y = mouse_grid.y div 4;
 
-	if modules[mouse_grid.x][mouse_grid.y].is_enabled DisableModule(mouse_grid.x, mouse_grid.y);
-	else EnableModule(mouse_grid.x, mouse_grid.y);
+	if modules[_x][_y].is_enabled DisableModule(_x, _y);
+	else EnableModule(_x, _y);
 }
 
 // Select unit
@@ -56,4 +56,25 @@ if mouse_check_button_released(mb_left)
 		CancelSelection();
 		audio_play_sound(snd_unit_error, 1, false);
 	}
+}
+
+// Place unit on location.
+var _zero = keyboard_check(vk_control);	// Delete unit
+var _one = keyboard_check_pressed(ord("1"));
+var _two = keyboard_check_pressed(ord("2"));
+var _three = keyboard_check_pressed(ord("3"));
+var _four = keyboard_check_pressed(ord("4"));
+var _five = keyboard_check_pressed(ord("5"));
+var _six = keyboard_check_pressed(ord("6"));
+
+if _one or _two or _three or _four or _five or _six or _zero
+{
+	DestroyUnit(mouse_grid.x, mouse_grid.y, 0, 0);
+	var _team = irandom_range(0, 2);
+	if		_one CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_pawn, _team);
+	else if _two CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_rook, _team);
+	else if _three CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_horse, _team);
+	else if _four CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_bishop, _team);
+	else if _five CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_queen, _team);
+	else if _six CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_king, _team);
 }

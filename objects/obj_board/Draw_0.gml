@@ -15,7 +15,6 @@ if is_selection_valid
 
 draw_set_alpha(1);
 
-
 // Draw game border.
 draw_rectangle_color(0, 0, size*tile_size, size*tile_size, c_aqua, c_aqua, c_aqua, c_aqua, true);
 
