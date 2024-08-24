@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"Vector",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"Scripts and Shaders",
+    "path":"folders/Scripts and Shaders.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

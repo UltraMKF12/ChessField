@@ -1,64 +1,74 @@
 // Creates a square board with x tiles.
-size = 20;
+module_amount = 5;
+
+// General Board properties
+size = module_amount * 4;
 tile_size = 32;
 
-selected_unit = noone;	//Currently selected unit.
-is_selection_valid = false;	// Used for checking valid move spaces
+board = [];		// Stores every tile
+modules = [];	// Stores every module
 
-// Used for selecting units and drawing selections
+selected_unit = noone;		//Currently selected unit.
+is_selection_valid = false;	// Used for checking if movement would be valid
+
+// Used for converting mouse position to board tile position.
 mouse_grid = new Vector(0, 0);
 
-// Board drawing and selection
+// Containes all the tiles where the currently selected unit can move
 possible_moves = [];
 
 
-//// ---------------------
-//// FUNCTIONS AND STRUCTS
-//// ---------------------
+// Ranges for tileset (Drawing the board)
+var _random_black = [7, 11];
+var _random_white = [1, 5];
 
-//Tile Class for tile data
-Tile = function(_color = "white", _unit = noone) constructor
+
+//// --------
+//// STRUCTS
+//// --------
+
+// Struct representing a single Tile on the board
+Tile = function(_range) constructor
 {
-	color = _color;
-	unit = _unit;
-	texture = 0;
-	self.SetTileTexture();
-	
-	static SetTileTexture = function()
-	{
-		var _random_black = [7, 11];
-		var _random_white = [1, 5];
-		
-		if color == "white"
-		{
-			texture = irandom_range(_random_white[0], _random_white[1]);
-		}
-		else if color == "black"
-		{
-			texture = irandom_range(_random_black[0], _random_black[1]);
-		}
-	}
+	is_enabled = false;
+	texture = irandom_range(_range[0], _range[1]);
+	unit = noone;
 }
 
+// Struct representing a single Module on the board.
+Module = function() constructor
+{
+	
+}
+
+
+//// -------------------
+//// Creating the Board
+//// -------------------
 
 // Create the tilemap layer for the board.
 var _layer = layer_create(100);
 tilemap = layer_tilemap_create(_layer, 0, 0, ts_board, size, size);
 
-// Create the board and fill it up with tile colors
-board = [];
+// Fill the board up with tiles of alternating black and white.
 for (var _i = 0; _i < size; _i++) {
     for (var _j = 0; _j < size; _j++) {
 		if (_i + _j) % 2 == 0
 		{
-			board[_i][_j] = new Tile("white");
+			board[_i][_j] = new Tile(_random_white);
 		}
-		else board[_i][_j] = new Tile("black");
+		else board[_i][_j] = new Tile(_random_black);
 		
-		//Set the tilemap to the correct texture
-		tilemap_set(tilemap, board[_i][_j].texture, _i, _j);
+		// Set the tilemap to the correct texture
+		//tilemap_set(tilemap, board[_i][_j].texture, _i, _j);
+		// By default it will be 0, meaning no modules visible.
 	}
 }
+
+
+//// ---------------------------------
+//// Functions for Board modifications
+//// ---------------------------------
 
 // Create a unit on the board
 CreateUnit = function(_cell_x, _cell_y, _unit, _team = 0)
@@ -72,6 +82,7 @@ CreateUnit = function(_cell_x, _cell_y, _unit, _team = 0)
 SelectUnit = function(_cell_x, _cell_y)
 {
 	selected_unit = board[_cell_x][_cell_y].unit;
+	if selected_unit == noone return;
 	selected_unit.selected = true;
 	
 	var _size_min = 0;
@@ -195,29 +206,15 @@ CancelSelection = function()
 	possible_moves = [];	// Reset the drawing
 }
 
+//// ----------------------------------
+//// Functions for Module modifications
+//// ----------------------------------
 
 
-//// ---------------------
+
+//// ------------
 //// SETUP CALLS
-//// ---------------------
-// Generate random board
-for(var _b1 = 0; _b1 < size; _b1++)
-{
-	for(var _b2 = 0; _b2 < size; _b2++)
-	{
-		if irandom_range(0, 10) == 0
-		{
-			CreateUnit(_b1, _b2, obj_unit, irandom_range(0, 2));
-			var _unit = board[_b1][_b2].unit;
-			_unit.in_line = irandom_range(0, 5);
-			_unit.diagonal = irandom_range(0, 5);
-			_unit.special = (irandom_range(0, 4) == 0) ?
-							[new Vector(-1, -2), new Vector(1, -2), new Vector(-1, 2), new Vector(1, 2),
-							new Vector(-2, -1), new Vector(-2, 1), new Vector(2, -1), new Vector(2, 1)] : [];
-			_unit.FindImage();
-		}
-	}
-}
+//// ------------
 
 
 sprite_index = -1;	//Hide the sprite

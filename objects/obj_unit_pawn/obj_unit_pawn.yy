@@ -1,19 +1,20 @@
 {
   "$GMObject":"",
-  "%Name":"obj_unit",
+  "%Name":"obj_unit_pawn",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_unit",
+  "name":"obj_unit_pawn",
   "overriddenProperties":[],
   "parent":{
     "name":"Units",
     "path":"folders/Objects/Units.yy",
   },
-  "parentObjectId":null,
+  "parentObjectId":{
+    "name":"obj_unit",
+    "path":"objects/obj_unit/obj_unit.yy",
+  },
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,

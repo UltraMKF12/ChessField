@@ -15,7 +15,7 @@ image_index = irandom_range(0, 5);
 /// -------------------
 
 // Horizontal and vertical, like a rook
-in_line = 3;
+in_line = 0;
 
 // Diagonal like a bishop
 diagonal = 0;
@@ -39,15 +39,4 @@ Destroy = function(_grid_x, _grid_y, _tile_size)
 	var _direction = point_direction(_x1, _y1, _x2, _y2);
 	speed = 0.5;
 	direction = _direction;
-}
-
-FindImage = function()
-{
-	var _special = array_length(special);
-	if _special > 0 image_index = 2;	// horse
-	else if in_line == 1 and diagonal == 1 image_index = 3; // king
-	else if in_line == 0 and diagonal >= 2 image_index = 5; // bishop
-	else if in_line >= 2 and diagonal == 0 image_index = 1; // rook
-	else if in_line >= 1 and diagonal >= 1 image_index = 4; // queen
-	else image_index = 0;	// pawn
 }

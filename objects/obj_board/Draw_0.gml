@@ -14,3 +14,5 @@ if is_selection_valid
 }
 
 draw_set_alpha(1);
+
+draw_text(mouse_x+20, mouse_y, tilemap_get_at_pixel(tilemap, mouse_x, mouse_y));

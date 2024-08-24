@@ -1,0 +1,25 @@
+Menu is the last thing to develop.
+
+1. Make an interface to have a way to connect the 
+play menu and the game 4*4x4 tiles with units on them.
+
+2. Make tiles ascend from below with the units.
+The way this animation works is by resizing everything, anchored to the middle, 
+to it looks good. (Or just use surfaces to make it easier)
+Generate random units with it.
+
+3. At the same time make sure the reverse is doable. 
+Units that are falling disitengrate with shaders.
+
+4. Draw borders around the board with thick purple outline.
+
+5. Make turn system so the player has to move all or x amount of their units,
+before automatically starting a new turn.
+Units that are not moved will sway left and right, units that are moved will become gray.
+
+6. Basic AI calculations, where for each enemy every tile that i can moved on gets a point.
+If it can take down an enemy it gets 100 points, if its a position that gets you close to enemy
+20 point, if its a position that will make the unit die its -50 points.
+A system similar to this will enable a very simple AI. While it will have problems with bishops
+it will be enough for a time. Implementing complex AI, where each unit has their own AI will,
+will be the final challange of the game development.

@@ -3,8 +3,8 @@
   "%Name":"sh_dissolve",
   "name":"sh_dissolve",
   "parent":{
-    "name":"Shaders",
-    "path":"folders/Shaders.yy",
+    "name":"Scripts and Shaders",
+    "path":"folders/Scripts and Shaders.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",
