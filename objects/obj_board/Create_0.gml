@@ -23,6 +23,8 @@ possible_moves = [];
 var _random_black = [7, 11];
 var _random_white = [1, 5];
 
+// Team for placing units
+team = 0;
 
 //// --------
 //// STRUCTS

@@ -70,11 +70,14 @@ var _six = keyboard_check_pressed(ord("6"));
 if _one or _two or _three or _four or _five or _six or _zero
 {
 	DestroyUnit(mouse_grid.x, mouse_grid.y, 0, 0);
-	var _team = irandom_range(0, 2);
-	if		_one CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_pawn, _team);
-	else if _two CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_rook, _team);
-	else if _three CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_horse, _team);
-	else if _four CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_bishop, _team);
-	else if _five CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_queen, _team);
-	else if _six CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_king, _team);
+	if		_one CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_pawn, team);
+	else if _two CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_rook, team);
+	else if _three CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_horse, team);
+	else if _four CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_bishop, team);
+	else if _five CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_queen, team);
+	else if _six CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_king, team);
 }
+
+// Change team
+if keyboard_check_pressed(vk_alt) team++;
+if team > 2 team = 0;
