@@ -1,0 +1,24 @@
+-The player can only move their own units.
+-A round can be skipped by pressing ENTER.
+
+Randomly 1-3 modules get added to the board with random unit composition of enemy and player.
+Modules have a larger chance to include units from the same team.
+
+In the players round there is a random chance for a module to fall after the round is over
+This is indicated by a red overlay.
+Empty tiles have bigger chance to fall.
+
+After the player moves all units or skips turn, the other 2 teams start moving 1 unit per second
+They use a basic ai, that simply looks at each avaliable move and check how close the unit will be
+to another unit, and when its can take down a unit it does.
+
+It does not calculate dangers, and does not think 2-3 turns in the future.
+
+Fix:
+The pawn should only be able to attack vertically.
+
+EXTRA:
+Shader that deletes sprite from direction, but right before deletion the edges that are about to be
+deleted are yellow-orange-red colored, like the sprite is being burned.
+
+Surface animation where units rise and fall, with basic dissolve shader.

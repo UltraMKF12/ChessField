@@ -1,6 +1,6 @@
 // Creates a square board with x tiles.
 module_amount = 5;
-module_size = 4;
+module_size = 3;
 
 // General Board properties
 size = module_amount * module_size;
