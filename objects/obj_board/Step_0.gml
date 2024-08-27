@@ -22,21 +22,11 @@ if mouse_grid.x < 0 or mouse_grid.x >= size or
 }
 
 
-//DEUBG: Module enabling
-if mouse_check_button_pressed(mb_right)
-{
-	var _x = mouse_grid.x div module_size;
-	var _y = mouse_grid.y div module_size;
-
-	if modules[_x][_y].is_enabled DisableModule(_x, _y);
-	else EnableModule(_x, _y);
-}
-
 // Select unit
 if mouse_check_button_pressed(mb_left)
 {
 	var _selected_tile = board[mouse_grid.x][mouse_grid.y]
-	if _selected_tile.unit != noone
+	if _selected_tile.unit != noone and _selected_tile.unit.can_move and _selected_tile.unit.team == 0
 	{
 		SelectUnit(mouse_grid.x, mouse_grid.y);
 		audio_play_sound(snd_unit_pickup, 1, false);
@@ -49,13 +39,40 @@ if mouse_check_button_released(mb_left)
 	if is_selection_valid and selected_unit != noone
 	{
 		MoveUnit(selected_unit.position.x, selected_unit.position.y, mouse_grid.x, mouse_grid.y);
-		audio_play_sound(snd_unit_place, 1, false);
 	}
 	else
 	{
 		CancelSelection();
 		audio_play_sound(snd_unit_error, 1, false);
 	}
+}
+
+if keyboard_check_pressed(vk_enter)
+{
+	EndTurn();
+}
+
+
+// Ending turn automatically for the player.
+// The ai automatically ends its turn
+if turn_team == 0 and turn_unmoved <= 0
+{
+	EndTurn();
+}
+
+
+/// --------------
+/// Admin Commands
+/// --------------
+
+//DEUBG: Module enabling
+if mouse_check_button_pressed(mb_right)
+{
+	var _x = mouse_grid.x div module_size;
+	var _y = mouse_grid.y div module_size;
+
+	if modules[_x][_y].is_enabled DisableModule(_x, _y);
+	else EnableModule(_x, _y);
 }
 
 // Place unit on location.
@@ -78,6 +95,6 @@ if _one or _two or _three or _four or _five or _six or _zero
 	else if _six CreateUnit(mouse_grid.x, mouse_grid.y, obj_unit_king, team);
 }
 
-// Change team
+// Change team to place
 if keyboard_check_pressed(vk_alt) team++;
 if team > 2 team = 0;

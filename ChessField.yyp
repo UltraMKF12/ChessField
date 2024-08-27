@@ -56,6 +56,7 @@
     {"id":{"name":"spr_board_tileset","path":"sprites/spr_board_tileset/spr_board_tileset.yy",},},
     {"id":{"name":"spr_board_white","path":"sprites/spr_board_white/spr_board_white.yy",},},
     {"id":{"name":"spr_game_icon","path":"sprites/spr_game_icon/spr_game_icon.yy",},},
+    {"id":{"name":"spr_gradient","path":"sprites/spr_gradient/spr_gradient.yy",},},
     {"id":{"name":"spr_horse","path":"sprites/spr_horse/spr_horse.yy",},},
     {"id":{"name":"spr_king","path":"sprites/spr_king/spr_king.yy",},},
     {"id":{"name":"spr_manager_board","path":"sprites/spr_manager_board/spr_manager_board.yy",},},

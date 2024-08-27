@@ -1,19 +1,29 @@
-draw_set_alpha(0.4);
-draw_set_color(c_yellow);
-for (var _i = 0; _i < array_length(possible_moves); _i++) {
-	var _tl = possible_moves[_i];
-	_tl = new Vector4(_tl, tile_size);
-    draw_rectangle(_tl.x1, _tl.y1, _tl.x2, _tl.y2, false);
-}
-
-draw_set_color(c_red);
-if is_selection_valid
+// Only draw unit lines if it's the player's turn;
+if turn_team == 0
 {
-	var _mouse_rectangle = new Vector4(mouse_grid, tile_size);
-	draw_rectangle(_mouse_rectangle.x1, _mouse_rectangle.y1, _mouse_rectangle.x2, _mouse_rectangle.y2, false);
-}
+	draw_set_alpha(0.4);
+	draw_set_color(c_yellow);
+	for (var _i = 0; _i < array_length(possible_moves); _i++) {
+		var _tl = possible_moves[_i];
+		_tl = new Vector4(_tl, tile_size);
+	    draw_rectangle(_tl.x1, _tl.y1, _tl.x2, _tl.y2, false);
+	}
 
-draw_set_alpha(1);
+	draw_set_color(c_red);
+	if is_selection_valid
+	{
+		var _mouse_rectangle = new Vector4(mouse_grid, tile_size);
+		draw_rectangle(_mouse_rectangle.x1, _mouse_rectangle.y1, _mouse_rectangle.x2, _mouse_rectangle.y2, false);
+	}
+	draw_set_alpha(1);
+}
+if enemy_draw_line
+{
+	if enemy_line_color == 1 draw_set_color(c_red);
+	else if enemy_line_color == 2 draw_set_color(c_purple);
+	
+	draw_arrow(enemy_move_start.x, enemy_move_start.y, enemy_move_end.x, enemy_move_end.y, 15);
+}
 
 // Draw game border.
 draw_rectangle_color(0, 0, size*tile_size, size*tile_size, c_aqua, c_aqua, c_aqua, c_aqua, true);

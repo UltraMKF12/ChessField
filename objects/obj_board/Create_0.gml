@@ -18,6 +18,16 @@ mouse_grid = new Vector(0, 0);
 // Containes all the tiles where the currently selected unit can move
 possible_moves = [];
 
+// Turn based variables
+turn_team = 0;
+turn_units = [];
+turn_unmoved = 0;	// Unmoved units, used for player auto turnskip
+
+// Drawing enemy move line
+enemy_move_start = new Vector(-1, -1);
+enemy_move_end = new Vector(-1, -1);
+enemy_draw_line = false;
+enemy_line_color = 1;
 
 // Ranges for tileset (Drawing the board)
 var _random_black = [7, 11];
@@ -123,6 +133,8 @@ SelectUnit = function(_cell_x, _cell_y)
 	if selected_unit == noone return;
 	selected_unit.selected = true;
 	
+	possible_moves = [];
+	
 	var _size_min = 0;
 	var _size_max = size-1;
 	var _in_line = selected_unit.in_line;
@@ -169,12 +181,19 @@ SelectUnit = function(_cell_x, _cell_y)
 			var _unit = board[_current_x][_current_y].unit;
 			if _unit != noone and _unit.team == _team break;
 			
-			// Add the tile to the moveset
-			var _new_tile = new Vector(_current_x, _current_y);
-			array_push(possible_moves, _new_tile);
+			// Create the tile vector
+			var _new_tile = new VectorTakedown(_current_x, _current_y);
 			
-			// If it's a different team unit, the unit cant move over it.
-			if _unit != noone and _unit.team != _team break;
+			// If it's a different team unit, the unit can't move over it.
+			// It will take it down when moved there.
+			if _unit != noone and _unit.team != _team 
+			{
+				_new_tile.takedown = true;
+				array_push(possible_moves, _new_tile);
+				break
+			};
+			
+			array_push(possible_moves, _new_tile);
 		}
 	}
 	
@@ -202,12 +221,25 @@ SelectUnit = function(_cell_x, _cell_y)
 			var _unit = board[_new_pos.x][_new_pos.y].unit;
 			if _unit != noone and _unit.team == _team continue;
 			
-			// Add the tile to the moveset
-			var _new_tile = new Vector(_new_pos.x, _new_pos.y);
-			array_push(possible_moves, _new_tile);
+			// Create the tile vector
+			var _new_tile = new VectorTakedown(_new_pos.x, _new_pos.y);
 			
-			// If it's a different team unit, the unit cant move over it.
-			if _unit != noone and _unit.team != _team continue;
+			// only move
+			if _special_array[_s].mode == 1 and _unit != noone continue;
+			
+			// only attack
+			if _special_array[_s].mode == 2 and _unit == noone continue;
+			
+			// If it's a different team unit, the unit can't move over it.
+			// It will take it down when moved there.
+			if _unit != noone and _unit.team != _team 
+			{
+				_new_tile.takedown = true;
+				array_push(possible_moves, _new_tile);
+				break;
+			};
+			
+			array_push(possible_moves, _new_tile);
 		}
 	}
 }
@@ -232,7 +264,12 @@ MoveUnit = function(_prev_cell_x, _prev_cell_y, _new_cell_x, _new_cell_y)
 	_unit.position.x = _new_cell_x;
 	_unit.position.y = _new_cell_y;
 	
+	_unit.can_move = false;
+	turn_unmoved--;
 	CancelSelection();
+	
+	if turn_team == 0 enemy_draw_line = false;	// Hide enemy line after player made first move
+	audio_play_sound(snd_unit_place, 1, false);	// So that every enemy plays a move sound
 }
 
 CancelSelection = function()
@@ -285,11 +322,44 @@ DisableModule = function(_x, _y)
 	RedrawBoard();
 }
 
+/// ---------------------------------
+///	Functions for Turn based gameplay
+/// ---------------------------------
+
+// Ends the player turn and starts enemy turn
+EndTurn = function()
+{
+	alarm[0] = -1;
+	turn_team++;
+	if turn_team > 2 {
+		turn_team = 0
+	};
+	GetUnitsFromTeam(turn_team);
+}
+
+// Gets all units from a team, enable movement only for that team
+GetUnitsFromTeam = function(_team)
+{
+	turn_units = [];
+	with (obj_unit)
+	{
+		can_move = false;
+		if team == _team and not is_dead
+		{
+			can_move = true;
+			array_push(other.turn_units, id);
+		}
+	}
+	turn_unmoved = array_length(turn_units);
+	if _team != 0 alarm[0] = 60;	// Start moving the enemy
+}
+
 //// ------------
 //// SETUP CALLS
 //// ------------
 
 EnableModule(2, 2);
 EnableModule(3, 2);
+GetUnitsFromTeam(0);
 
 sprite_index = -1;	//Hide the sprite

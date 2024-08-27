@@ -1,5 +1,6 @@
 selected = false;
 team = 0;	// Team 0 is player
+can_move = false // Used for turns
 
 // Apply shader when dead
 is_dead = false;
