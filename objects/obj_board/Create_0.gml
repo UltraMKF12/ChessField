@@ -114,6 +114,11 @@ CreateUnit = function(_cell_x, _cell_y, _unit, _team = 0)
 	var _new_unit = instance_create_layer(_cell_x*tile_size+16, _cell_y*tile_size+16, "Units", _unit);
 	board[_cell_x][_cell_y].unit = _new_unit;
 	_new_unit.team = _team;
+	if _team == turn_team 
+	{
+		_new_unit.can_move = true;
+		turn_unmoved++;
+	}
 }
 
 // Destroy a unit on the board, uses the destroyers position, for direction calculations
@@ -123,6 +128,7 @@ DestroyUnit = function(_cell_x, _cell_y, _from_x, _from_y)
 	{
 		board[_cell_x][_cell_y].unit.Destroy(_from_x, _from_y, tile_size);
 		board[_cell_x][_cell_y].unit = noone;
+		turn_unmoved--;
 	}
 }
 

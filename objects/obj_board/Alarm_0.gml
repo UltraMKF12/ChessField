@@ -6,6 +6,13 @@ if array_length(turn_units) == 0
 }
 var _enemy = array_pop(turn_units);
 
+// If enemy was deleted after unit selection, make sure it doesnt crash the game.
+if not instance_exists(_enemy)
+{
+	alarm[0] = 60;	// Skip to the next unit.
+	exit;
+}
+
 // Get all the moves the enemy can make.
 SelectUnit(_enemy.position.x, _enemy.position.y);
 
