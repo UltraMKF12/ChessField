@@ -1,3 +1,15 @@
+// Mark modules soon to be deleted
+for (var _m = 0; _m < array_length(marked_modules); _m++)
+{
+	var _module_pos = marked_modules[_m].position; 
+	draw_set_color(c_red);
+	draw_set_alpha(0.3);
+	draw_rectangle(_module_pos.x1*tile_size, _module_pos.y1*tile_size, 
+				_module_pos.x1*tile_size + tile_size*module_size-1, _module_pos.y1*tile_size + tile_size*module_size-1, false)
+	draw_set_color(c_white);
+	draw_set_alpha(1);
+}
+
 // Only draw unit lines if it's the player's turn;
 if turn_team == 0
 {

@@ -10,6 +10,13 @@ function VectorTakedown(_x = 0, _y = 0, _takedown = false) constructor{
 	takedown = _takedown;
 }
 
+function VectorUnitSprite(_x, _y, _sprite) constructor{
+	x = _x;
+	y = _y;
+	sprite = _sprite;
+}
+
+
 /// 0 - Move AND Attack | 
 /// 1 - Only Move |
 /// 2 - Only Attack

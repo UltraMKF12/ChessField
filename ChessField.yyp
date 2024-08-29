@@ -31,7 +31,6 @@
   },
   "name":"ChessField",
   "resources":[
-    {"id":{"name":"TODO","path":"notes/TODO/TODO.yy",},},
     {"id":{"name":"obj_board","path":"objects/obj_board/obj_board.yy",},},
     {"id":{"name":"obj_camera","path":"objects/obj_camera/obj_camera.yy",},},
     {"id":{"name":"obj_fpscounter","path":"objects/obj_fpscounter/obj_fpscounter.yy",},},

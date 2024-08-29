@@ -8,6 +8,7 @@ tile_size = 32;
 
 board = [];		// Stores every tile
 modules = [];	// Stores every module
+marked_modules = []; // Stores modules marked for deletion.
 
 selected_unit = noone;		//Currently selected unit.
 is_selection_valid = false;	// Used for checking if movement would be valid
@@ -127,8 +128,14 @@ DestroyUnit = function(_cell_x, _cell_y, _from_x, _from_y)
 	if board[_cell_x][_cell_y].unit != noone
 	{
 		board[_cell_x][_cell_y].unit.Destroy(_from_x, _from_y, tile_size);
+		
+		if board[_cell_x][_cell_y].unit.team == turn_team
+		{
+			turn_unmoved--;
+		}
+		
 		board[_cell_x][_cell_y].unit = noone;
-		turn_unmoved--;
+
 	}
 }
 
@@ -294,8 +301,7 @@ CancelSelection = function()
 EnableModule = function(_x, _y)
 {
 	var _module = modules[_x][_y];
-	_module.is_enabled = true;
-	show_debug_message(_module.position.x1);
+	var _units = [];
 	for (var _t1 = _module.position.x1; _t1 <= _module.position.x2; _t1++) {
 		for (var _t2 = _module.position.y1; _t2 <= _module.position.y2; _t2++) {
 			board[_t1][_t2].is_enabled = true;
@@ -304,16 +310,17 @@ EnableModule = function(_x, _y)
 			if irandom_range(0,5) == 0
 			{
 				CreateUnit(_t1, _t2, _unit, irandom_range(0, 2));
+				array_push(_units, new VectorUnitSprite(_t1, _t2, _unit.sprite_index));
 			}
 		}
 	}
-	RedrawBoard();
+	PlayEnableAnimation(_x, _y, 0);
 }
 
 DisableModule = function(_x, _y)
 {
 	var _module = modules[_x][_y];
-	_module.is_enabled = false;
+	var _units = [];
 	for (var _t1 = _module.position.x1; _t1 <= _module.position.x2; _t1++) {
 		for (var _t2 = _module.position.y1; _t2 <= _module.position.y2; _t2++) {
 			board[_t1][_t2].is_enabled = false;
@@ -321,12 +328,100 @@ DisableModule = function(_x, _y)
 			var _unit = board[_t1][_t2].unit;
 			if _unit != noone
 			{
+				array_push(_units, new VectorUnitSprite(_t1, _t2, _unit.sprite_index));
 				DestroyUnit(_t1, _t2, _t1, _t2);
 			}
 		}
 	}
+	PlayDisableAnimation(_x, _y, _units);
+}
+
+// TODO make sure RedrawBoard supports redwaring only a specific module !!!!!!!!!!!!!!!!!!!!!!!!!
+// TODO make sure RedrawBoard supports redwaring only a specific module !!!!!!!!!!!!!!!!!!!!!!!!!
+// TODO make sure RedrawBoard supports redwaring only a specific module !!!!!!!!!!!!!!!!!!!!!!!!!
+// TODO make sure RedrawBoard supports redwaring only a specific module !!!!!!!!!!!!!!!!!!!!!!!!!
+// TODO make sure RedrawBoard supports redwaring only a specific module !!!!!!!!!!!!!!!!!!!!!!!!!
+PlayEnableAnimation = function(_x, _y, _units)
+{
+	// Create an object that is a replica of the board needed to be enabled
+	// Stop this object after animation is finished, redraw board.
+	modules[_x][_y].is_enabled = true;
 	RedrawBoard();
 }
+
+PlayDisableAnimation = function(_x, _y, _units)
+{
+	modules[_x][_y].is_enabled = false;
+	RedrawBoard();
+}
+
+// Enables modules, deletes marked modules, randomly marks modules for deletion
+MarkModules = function(_x, _y, _units)
+{
+	// Delete all marked modules
+	for (var _i = 0; _i < array_length(marked_modules); _i++)
+	{
+		DisableModule(marked_modules[_i].position.x1 div module_size, marked_modules[_i].position.y1 div module_size)
+	}
+	marked_modules = [];
+	
+	//Get all enabled modules
+	var _enabled_modules = [];
+	for (var _m1 = 0; _m1 < module_amount; _m1++) {
+		for (var _m2 = 0; _m2 < module_amount; _m2++) {
+			if modules[_m1][_m2].is_enabled array_push(_enabled_modules, modules[_m1][_m2]);
+		}
+	}
+	
+	// Pick 1-3 neighbours and enable them or active a single one randomly if none are enabled
+	if array_length(_enabled_modules) == 0
+	{
+		var _m1 = irandom_range(0, module_amount-1);
+		var _m2 = irandom_range(0, module_amount-1);
+		EnableModule(_m1, _m2);
+	}
+	else
+	{
+		// Amount of tries to enable a new module. The more module there are the more difficult to enable new ones
+		var _amount = irandom_range(1, 3); 
+		repeat(_amount)
+		{
+			var _selected_module = _enabled_modules[irandom_range(0, array_length(_enabled_modules) - 1)];
+			// Check all 4 sides of the module
+			
+			var _xm = _selected_module.position.x1 div module_size;
+			var _ym = _selected_module.position.y1 div module_size;
+			
+			// Up, right, down, left
+			var _x_dir = [0, 1, 0, -1];
+			var _y_dir = [-1, 0, 1, 0];
+			repeat(10)
+			{
+				var _i = irandom_range(0, 3);	// Randomly selects a direction
+				var _new_x = _xm + _x_dir[_i];
+				var _new_y = _ym + _y_dir[_i];
+				if _new_x < 0 or _new_x >= module_amount or _new_y < 0 or _new_y >= module_amount continue;
+				if modules[_new_x, _new_y].is_enabled continue;
+				else EnableModule(_new_x, _new_y);
+				break;
+			}
+			
+		}
+	}
+	
+	// Pick 0-2 modules randombly to mark for deletion
+	// Always leave 1 module on board
+	var _delete_amount = irandom_range(0, 2);
+	if array_length(_enabled_modules) - _delete_amount > 0
+	{
+		var _shuffled_array = array_shuffle(_enabled_modules);
+		repeat(_delete_amount)
+		{
+			array_push(marked_modules, array_pop(_shuffled_array));
+		}
+	}
+}
+
 
 /// ---------------------------------
 ///	Functions for Turn based gameplay
@@ -339,6 +434,7 @@ EndTurn = function()
 	turn_team++;
 	if turn_team > 2 {
 		turn_team = 0
+		MarkModules(); // Enable or disable modules on player turn.
 	};
 	GetUnitsFromTeam(turn_team);
 }
@@ -367,5 +463,6 @@ GetUnitsFromTeam = function(_team)
 EnableModule(2, 2);
 EnableModule(3, 2);
 GetUnitsFromTeam(0);
+marked_modules[0] = modules[2][2];
 
 sprite_index = -1;	//Hide the sprite
