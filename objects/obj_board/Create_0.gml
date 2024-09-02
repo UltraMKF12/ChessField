@@ -336,11 +336,8 @@ DisableModule = function(_x, _y)
 	PlayDisableAnimation(_x, _y, _units);
 }
 
-// TODO make sure RedrawBoard supports redwaring only a specific module !!!!!!!!!!!!!!!!!!!!!!!!!
-// TODO make sure RedrawBoard supports redwaring only a specific module !!!!!!!!!!!!!!!!!!!!!!!!!
-// TODO make sure RedrawBoard supports redwaring only a specific module !!!!!!!!!!!!!!!!!!!!!!!!!
-// TODO make sure RedrawBoard supports redwaring only a specific module !!!!!!!!!!!!!!!!!!!!!!!!!
-// TODO make sure RedrawBoard supports redwaring only a specific module !!!!!!!!!!!!!!!!!!!!!!!!!
+
+// TODO: make sure RedrawBoard supports redrawing only a specific module
 PlayEnableAnimation = function(_x, _y, _units)
 {
 	// Create an object that is a replica of the board needed to be enabled
@@ -357,14 +354,7 @@ PlayDisableAnimation = function(_x, _y, _units)
 
 // Enables modules, deletes marked modules, randomly marks modules for deletion
 MarkModules = function(_x, _y, _units)
-{
-	// Delete all marked modules
-	for (var _i = 0; _i < array_length(marked_modules); _i++)
-	{
-		DisableModule(marked_modules[_i].position.x1 div module_size, marked_modules[_i].position.y1 div module_size)
-	}
-	marked_modules = [];
-	
+{	
 	//Get all enabled modules
 	var _enabled_modules = [];
 	for (var _m1 = 0; _m1 < module_amount; _m1++) {
@@ -408,6 +398,13 @@ MarkModules = function(_x, _y, _units)
 			
 		}
 	}
+	
+	// Delete all marked modules, after enabling modules, to not delete then reenable modules at the same time.
+	for (var _i = 0; _i < array_length(marked_modules); _i++)
+	{
+		DisableModule(marked_modules[_i].position.x1 div module_size, marked_modules[_i].position.y1 div module_size)
+	}
+	marked_modules = [];
 	
 	// Pick 0-2 modules randombly to mark for deletion
 	// Always leave 1 module on board
