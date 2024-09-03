@@ -14,6 +14,7 @@ __The game currently features__:
 - Modular chess board that "falls down" or "rises from above" simulating an ever changing battlefield of units, as with every new module that comes up randomly selected units are created on them.
 - Simple shader dissolve shader for unit destruction.
 
+Download the game at [Releases](https://github.com/UltraMKF12/ChessField/releases), or played in the browser at [itch.io](https://ultramkf12.itch.io/chessfield)
 
 __Planned features__:
 - Start, Options and Play menu.
@@ -24,6 +25,7 @@ __Planned features__:
 # Controls:
 - WASD - Move the camera
 - Left Mouse Button - HOLD to select and drag a unit to a location, RELEASE to place unit.
+- ScrollWheel - Zoom
 
 __Debug, Cheats__:
 - Right Mouse Button - Place or remove a module on mouse position
